@@ -54,11 +54,21 @@ class CCM_Scanner {
         return array_slice( array_unique( $urls ), 0, $limit );
     }
 
+    public static function lookup( $name, $known ) {
+        if ( isset( $known[ $name ] ) ) return $known[ $name ];
+        foreach ( $known as $key => $entry ) {
+            if ( '*' === substr( $key, -1 ) && 0 === strpos( $name, substr( $key, 0, -1 ) ) ) {
+                return $entry;
+            }
+        }
+        return null;
+    }
+
     private function store( $found, $known ) {
         global $wpdb;
         $t = $wpdb->prefix . 'ccm_cookies';
         foreach ( $found as $name => $info ) {
-            $k      = $known[ $name ] ?? null;
+            $k      = self::lookup( $name, $known );
             $row    = array(
                 'name'     => $name,
                 'provider' => $k['provider'] ?? '',
@@ -82,18 +92,40 @@ class CCM_Scanner {
     /** Known-cookie dictionary — grow this (public lists exist) or fetch remotely. */
     private function known() {
         return array(
-            '_ga'        => array( 'provider' => 'Google',          'category' => 'analytics',     'expiry' => '2 years' ),
-            '_gid'       => array( 'provider' => 'Google',          'category' => 'analytics',     'expiry' => '1 day' ),
-            '_ga_*'      => array( 'provider' => 'Google',          'category' => 'analytics',     'expiry' => '2 years' ),
-            '_gcl_au'    => array( 'provider' => 'Google Ads',      'category' => 'advertisement', 'expiry' => '3 months' ),
-            'IDE'        => array( 'provider' => 'Google',          'category' => 'advertisement', 'expiry' => '2 years' ),
-            '_fbp'       => array( 'provider' => 'Meta',            'category' => 'advertisement', 'expiry' => '3 months' ),
-            'fr'         => array( 'provider' => 'Meta',            'category' => 'advertisement', 'expiry' => '3 months' ),
-            '_hjSessionUser' => array( 'provider' => 'Hotjar',      'category' => 'analytics',     'expiry' => '1 year' ),
-            'hubspotutk' => array( 'provider' => 'HubSpot',         'category' => 'analytics',     'expiry' => '13 months' ),
-            'NID'        => array( 'provider' => 'Google',          'category' => 'advertisement', 'expiry' => '6 months' ),
-            'VISITOR_INFO1_LIVE' => array( 'provider' => 'YouTube', 'category' => 'functional',    'expiry' => '6 months' ),
-            'YSC'        => array( 'provider' => 'YouTube',         'category' => 'functional',    'expiry' => 'session' ),
+            '_ga'        => array( 'provider' => 'Google',             'category' => 'analytics',     'expiry' => '2 years' ),
+            '_gid'       => array( 'provider' => 'Google',             'category' => 'analytics',     'expiry' => '1 day' ),
+            '_ga_*'      => array( 'provider' => 'Google',             'category' => 'analytics',     'expiry' => '2 years' ),
+            '_gat'       => array( 'provider' => 'Google',             'category' => 'analytics',     'expiry' => '1 minute' ),
+            '_gcl_au'    => array( 'provider' => 'Google Ads',         'category' => 'advertisement', 'expiry' => '3 months' ),
+            '_gcl_aw'    => array( 'provider' => 'Google Ads',         'category' => 'advertisement', 'expiry' => '3 months' ),
+            'IDE'        => array( 'provider' => 'Google',             'category' => 'advertisement', 'expiry' => '2 years' ),
+            'test_cookie'=> array( 'provider' => 'Google (Doubleclick)', 'category' => 'advertisement', 'expiry' => 'session' ),
+            'DSID'       => array( 'provider' => 'Google (Doubleclick)', 'category' => 'advertisement', 'expiry' => '2 weeks' ),
+            'NID'        => array( 'provider' => 'Google',             'category' => 'advertisement', 'expiry' => '6 months' ),
+            '_fbp'       => array( 'provider' => 'Meta',               'category' => 'advertisement', 'expiry' => '3 months' ),
+            'fr'         => array( 'provider' => 'Meta',               'category' => 'advertisement', 'expiry' => '3 months' ),
+            'undefined'  => array( 'provider' => 'Meta',               'category' => 'advertisement', 'expiry' => 'session' ),
+            'ttclid'     => array( 'provider' => 'TikTok',             'category' => 'advertisement', 'expiry' => '13 months' ),
+            '_ttp'       => array( 'provider' => 'TikTok',             'category' => 'advertisement', 'expiry' => '13 months' ),
+            'li_sugr'    => array( 'provider' => 'LinkedIn',           'category' => 'advertisement', 'expiry' => '3 months' ),
+            'bcookie'    => array( 'provider' => 'LinkedIn',           'category' => 'advertisement', 'expiry' => '1 year' ),
+            'lidc'       => array( 'provider' => 'LinkedIn',           'category' => 'functional',    'expiry' => '1 day' ),
+            '_uetvid'    => array( 'provider' => 'Microsoft (Bing)',   'category' => 'advertisement', 'expiry' => '13 months' ),
+            '_uetsid'    => array( 'provider' => 'Microsoft (Bing)',   'category' => 'analytics',     'expiry' => '1 day' ),
+            '_clck'      => array( 'provider' => 'Microsoft Clarity',  'category' => 'analytics',     'expiry' => '1 year' ),
+            '_clsk'      => array( 'provider' => 'Microsoft Clarity',  'category' => 'analytics',     'expiry' => '1 day' ),
+            '_hjSessionUser' => array( 'provider' => 'Hotjar',         'category' => 'analytics',     'expiry' => '1 year' ),
+            '_hjSession' => array( 'provider' => 'Hotjar',             'category' => 'analytics',     'expiry' => '30 minutes' ),
+            'hubspotutk' => array( 'provider' => 'HubSpot',            'category' => 'analytics',     'expiry' => '13 months' ),
+            '__hstc'     => array( 'provider' => 'HubSpot',            'category' => 'analytics',     'expiry' => '13 months' ),
+            '__hssrc'    => array( 'provider' => 'HubSpot',            'category' => 'analytics',     'expiry' => 'session' ),
+            '__hssc'     => array( 'provider' => 'HubSpot',            'category' => 'analytics',     'expiry' => '30 minutes' ),
+            'messagesUtk'=> array( 'provider' => 'HubSpot',            'category' => 'functional',    'expiry' => '13 months' ),
+            'VISITOR_INFO1_LIVE' => array( 'provider' => 'YouTube',    'category' => 'functional',    'expiry' => '6 months' ),
+            'YSC'        => array( 'provider' => 'YouTube',            'category' => 'functional',    'expiry' => 'session' ),
+            'vuid'       => array( 'provider' => 'Vimeo',              'category' => 'functional',    'expiry' => '2 years' ),
+            'wordpress_*'=> array( 'provider' => 'WordPress',          'category' => 'functional',    'expiry' => 'session' ),
+            'wp-settings-*' => array( 'provider' => 'WordPress',       'category' => 'functional',    'expiry' => '1 year' ),
         );
     }
 }
