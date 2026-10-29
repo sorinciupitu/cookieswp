@@ -12,7 +12,7 @@ class CCM_Rest {
     public function routes() {
         register_rest_route( 'ccm/v1', '/consent', array(
             'methods'             => 'POST',
-            'permission_callback' => array( $this, 'scan_auth' ),
+            'permission_callback' => '__return_true',
             'args'                => array(
                 'action'        => array( 'required' => true, 'enum' => array( 'accept_all', 'reject_all', 'custom' ) ),
                 'uuid'          => array( 'required' => true, 'type' => 'string' ),
@@ -21,7 +21,7 @@ class CCM_Rest {
                 'advertisement' => array( 'type' => 'boolean', 'default' => false ),
                 'url'           => array( 'type' => 'string' ),
             ),
-            'callback'            => array( $this, 'ingest_scan' ),
+            'callback'            => array( $this, 'log' ),
         ) );
     }
 
