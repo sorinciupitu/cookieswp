@@ -23,6 +23,16 @@ class CCM_Rest {
             ),
             'callback'            => array( $this, 'log' ),
         ) );
+
+        register_rest_route( 'ccm/v1', '/scan', array(
+            'methods'             => 'POST',
+            'permission_callback' => function ( $req ) {
+                $stored = ccm_get_scan_token();
+                $sent   = $req->get_header( 'X-CCM-Token' );
+                return ( '' !== $stored && is_string( $sent ) && hash_equals( $stored, $sent ) );
+            },
+            'callback'            => array( $this, 'ingest_scan' ),
+        ) );
     }
 
     public function log( $req ) {
@@ -45,5 +55,38 @@ class CCM_Rest {
         ) );
 
         return rest_ensure_response( array( 'ok' => true ) );
+    }
+
+    public function ingest_scan( $req ) {
+        global $wpdb;
+        $t       = $wpdb->prefix . 'ccm_cookies';
+        $cats    = array( 'necessary', 'functional', 'analytics', 'advertisement', 'unclassified' );
+        $added   = 0;
+        $updated = 0;
+
+        foreach ( (array) $req->get_param( 'cookies' ) as $c ) {
+            $name = sanitize_text_field( $c['name'] ?? '' );
+            if ( '' === $name ) continue;
+            $row = array(
+                'name'     => $name,
+                'provider' => sanitize_text_field( $c['provider'] ?? '' ),
+                'category' => in_array( $c['category'] ?? '', $cats, true ) ? $c['category'] : 'unclassified',
+                'ctype'    => 'http',
+                'expiry'   => sanitize_text_field( $c['expiry'] ?? 'session' ),
+                'pages'    => implode( "\n", array_map( 'sanitize_text_field', (array) ( $c['pages'] ?? array() ) ) ),
+                'source'   => 'auto',
+                'status'   => 'active',
+            );
+            $exists = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $t WHERE name = %s", $name ) );
+            if ( $exists ) {
+                $wpdb->update( $t, $row, array( 'id' => $exists ) );
+                $updated++;
+            } else {
+                $row['created_at'] = current_time( 'mysql' );
+                $wpdb->insert( $t, $row );
+                $added++;
+            }
+        }
+        return rest_ensure_response( array( 'ok' => true, 'added' => $added, 'updated' => $updated ) );
     }
 }

@@ -14,6 +14,15 @@ define( 'CCM_VERSION', '1.0.0' );
 define( 'CCM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CCM_URL', plugin_dir_url( __FILE__ ) );
 
+function ccm_get_scan_token() {
+    $token = get_option( 'ccm_scan_token', '' );
+    if ( '' === $token ) {
+        $token = wp_generate_password( 48, false );
+        add_option( 'ccm_scan_token', $token );
+    }
+    return $token;
+}
+
 function ccm_default_settings() {
     return array(
         'enabled'            => 1,
