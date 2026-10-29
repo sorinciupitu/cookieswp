@@ -5,3 +5,5 @@ scans/
 .DS_Store
 .vscode/
 .superpowers/
+build/
+release/

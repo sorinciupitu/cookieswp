@@ -1,0 +1,19 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build release zip
+        run: bin/build-release.sh "${GITHUB_REF_NAME#v}"
+      - name: Upload release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/consent-suite.zip
