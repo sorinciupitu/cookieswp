@@ -8,7 +8,9 @@ class CCM_Geo {
     public static function region() {
         // Prefer free edge headers (Cloudflare, CloudFront, Apache mod_geoip) — no latency, cache-safe.
         foreach ( array( 'HTTP_CF_IPCOUNTRY', 'HTTP_CLOUDFRONT_VIEWER_COUNTRY', 'GEOIP_COUNTRY_CODE' ) as $k ) {
-            if ( ! empty( $_SERVER[ $k ] ) ) return sanitize_text_field( $_SERVER[ $k ] );
+            if ( empty( $_SERVER[ $k ] ) ) continue;
+            $cc = strtoupper( trim( sanitize_text_field( wp_unslash( $_SERVER[ $k ] ) ) ) );
+            if ( preg_match( '/^[A-Z]{2}$/', $cc ) ) return $cc;
         }
         // Fallback: cached IP lookup (avoid on high-traffic sites — use a CDN header instead).
         $ip = $_SERVER['REMOTE_ADDR'] ?? '';
@@ -18,6 +20,7 @@ class CCM_Geo {
         if ( false === $cc ) {
             $res = wp_remote_get( 'https://ipapi.co/' . rawurlencode( $ip ) . '/country/', array( 'timeout' => 3 ) );
             $cc  = is_wp_error( $res ) ? '' : strtoupper( trim( wp_remote_retrieve_body( $res ) ) );
+            if ( ! preg_match( '/^[A-Z]{2}$/', $cc ) ) $cc = '';
             set_transient( $key, $cc, DAY_IN_SECONDS );
         }
         return $cc;

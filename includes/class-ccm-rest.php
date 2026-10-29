@@ -39,10 +39,10 @@ class CCM_Rest {
         if ( empty( $this->s['log_consents'] ) ) return rest_ensure_response( array( 'ok' => true ) );
         global $wpdb;
 
-        $wpdb->insert( $wpdb->prefix . 'ccm_consent_logs', array(
+        $inserted = $wpdb->insert( $wpdb->prefix . 'ccm_consent_logs', array(
             'uuid'            => substr( sanitize_text_field( $req['uuid'] ), 0, 64 ),
             'ip_hash'         => hash( 'sha256', ( $_SERVER['REMOTE_ADDR'] ?? '' ) . wp_salt( 'nonce' ) ),
-            'region'          => CCM_Geo::region(),
+            'region'          => substr( CCM_Geo::region(), 0, 10 ),
             'necessary'       => 1,
             'functional'      => $req['functional'] ? 1 : 0,
             'analytics'       => $req['analytics'] ? 1 : 0,
@@ -54,6 +54,9 @@ class CCM_Rest {
             'created_at'      => current_time( 'mysql' ),
         ) );
 
+        if ( false === $inserted ) {
+            return new WP_Error( 'ccm_log_failed', 'Failed to log consent', array( 'status' => 500 ) );
+        }
         return rest_ensure_response( array( 'ok' => true ) );
     }
 

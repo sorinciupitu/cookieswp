@@ -191,9 +191,13 @@ class CCM_Admin {
         $rows = $wpdb->get_results( "SELECT * FROM {$wpdb->prefix}ccm_consent_logs ORDER BY id ASC", ARRAY_A );
         header( 'Content-Type: text/csv; charset=utf-8' );
         header( 'Content-Disposition: attachment; filename=consent-log-' . gmdate( 'Y-m-d' ) . '.csv' );
+        $neutralize = function ( $v ) {
+            $v = (string) $v;
+            return preg_match( '/^[=+\-@\t\r]/', $v ) ? "'" . $v : $v;
+        };
         $out = fopen( 'php://output', 'w' );
-        if ( $rows ) fputcsv( $out, array_keys( $rows[0] ) );
-        foreach ( $rows as $r ) fputcsv( $out, $r );
+        if ( $rows ) fputcsv( $out, array_map( $neutralize, array_keys( $rows[0] ) ) );
+        foreach ( $rows as $r ) fputcsv( $out, array_map( $neutralize, $r ) );
         fclose( $out ); exit;
     }
 }

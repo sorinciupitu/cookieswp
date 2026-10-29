@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Consent Suite
  * Description:  GDPR/CCPA cookie consent, script blocking, cookie scanner, consent log.
- * Version:      1.0.0
+ * Version:      1.0.1
  * Requires PHP: 7.4
  * License:      GPL-2.0-or-later
  * Text Domain:  consent-suite
@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CCM_VERSION', '1.0.0' );
+define( 'CCM_VERSION', '1.0.1' );
 define( 'CCM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CCM_URL', plugin_dir_url( __FILE__ ) );
 
@@ -23,20 +23,21 @@ function ccm_get_scan_token() {
     return $token;
 }
 
-if ( is_admin() && ! class_exists( 'YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory' ) ) {
+if ( ! class_exists( 'YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory' ) ) {
     require_once CCM_PATH . 'includes/lib/plugin-update-checker/plugin-update-checker.php';
-    \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
-        'https://github.com/sorinciupitu/cookieswp/',
-        __FILE__,
-        'consent-suite'
-    );
-    add_filter( 'auto_update_plugin', function ( $update, $item ) {
-        if ( ! apply_filters( 'ccm_auto_update_plugin', false ) ) {
-            return $update;
-        }
-        return ( isset( $item->slug ) && 'consent-suite' === $item->slug ) ? true : $update;
-    }, 10, 2 );
 }
+$ccm_update_checker = \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+    'https://github.com/sorinciupitu/cookieswp/',
+    __FILE__,
+    'consent-suite'
+);
+$ccm_update_checker->getVcsApi()->enableReleaseAssets( '/consent-suite\.zip$/' );
+add_filter( 'auto_update_plugin', function ( $update, $item ) {
+    if ( ! apply_filters( 'ccm_auto_update_plugin', false ) ) {
+        return $update;
+    }
+    return ( isset( $item->slug ) && 'consent-suite' === $item->slug ) ? true : $update;
+}, 10, 2 );
 
 function ccm_default_settings() {
     return array(
