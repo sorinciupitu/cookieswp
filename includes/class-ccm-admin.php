@@ -10,6 +10,7 @@ class CCM_Admin {
         add_action( 'admin_post_ccm_save',    array( $this, 'save' ) );
         add_action( 'admin_post_ccm_scan',    array( $this, 'queue_scan' ) );
         add_action( 'admin_post_ccm_export',  array( $this, 'export_csv' ) );
+        add_action( 'admin_post_ccm_regen_token', array( $this, 'regen_token' ) );
     }
 
     public function menu() {
@@ -60,8 +61,16 @@ class CCM_Admin {
                 <tr><th>Consent version</th><td>
                     <input type="number" name="s[consent_version]" value="<?php echo (int) $s['consent_version']; ?>" min="1">
                     <p class="description">Increase to re-prompt every visitor (e.g. after policy changes).</p></td></tr>
+                <tr><th>Scan token</th><td>
+                    <input class="large-text code" type="text" readonly value="<?php echo esc_attr( ccm_get_scan_token() ); ?>" onfocus="this.select()">
+                    <p class="description">Paste into the headless scanner's <code>config.json</code> to push scan results here.</p>
+                </td></tr>
             </table>
             <p><button class="button button-primary">Save Settings</button></p>
+        </form>
+        <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+            <?php wp_nonce_field( 'ccm_regen_token' ); ?><input type="hidden" name="action" value="ccm_regen_token">
+            <p><button class="button">Regenerate scan token</button></p>
         </form>
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'ccm_scan' ); ?><input type="hidden" name="action" value="ccm_scan">
@@ -164,6 +173,14 @@ class CCM_Admin {
         check_admin_referer( 'ccm_scan' );
         CCM_Plugin::instance()->scanner->queue();
         wp_safe_redirect( add_query_arg( array( 'page' => 'ccm-cookies', 'scan' => 1 ), admin_url( 'admin.php' ) ) );
+        exit;
+    }
+
+    public function regen_token() {
+        if ( ! current_user_can( 'manage_options' ) ) wp_die();
+        check_admin_referer( 'ccm_regen_token' );
+        update_option( 'ccm_scan_token', wp_generate_password( 48, false ) );
+        wp_safe_redirect( add_query_arg( array( 'page' => 'consent-suite', 'regenerated' => 1 ), admin_url( 'admin.php' ) ) );
         exit;
     }
 
