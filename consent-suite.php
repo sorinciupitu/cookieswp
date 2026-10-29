@@ -23,6 +23,21 @@ function ccm_get_scan_token() {
     return $token;
 }
 
+if ( is_admin() && ! class_exists( 'YahnisElsts\\PluginUpdateChecker\\v5\\PucFactory' ) ) {
+    require_once CCM_PATH . 'includes/lib/plugin-update-checker/plugin-update-checker.php';
+    \YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(
+        'https://github.com/sorinciupitu/cookieswp/',
+        __FILE__,
+        'consent-suite'
+    );
+    add_filter( 'auto_update_plugin', function ( $update, $item ) {
+        if ( ! apply_filters( 'ccm_auto_update_plugin', false ) ) {
+            return $update;
+        }
+        return ( isset( $item->slug ) && 'consent-suite' === $item->slug ) ? true : $update;
+    }, 10, 2 );
+}
+
 function ccm_default_settings() {
     return array(
         'enabled'            => 1,
