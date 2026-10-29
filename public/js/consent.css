@@ -1,0 +1,21 @@
+.ccm-banner{position:fixed;z-index:99999;background:var(--ccm-bg,#fff);color:var(--ccm-text,#212121);
+    border-radius:10px;box-shadow:0 8px 40px rgba(0,0,0,.2);padding:24px;max-width:420px;font-size:14px;line-height:1.55;box-sizing:border-box}
+.ccm-pos-bottom-left{left:24px;bottom:24px}.ccm-pos-bottom-right{right:24px;bottom:24px}
+.ccm-pos-bottom-center{left:50%;bottom:24px;transform:translateX(-50%)}
+.ccm-pos-top-left{left:24px;top:24px}.ccm-pos-top-right{right:24px;top:24px}
+.ccm-bar{left:0!important;right:0!important;bottom:0!important;top:auto!important;transform:none!important;
+    max-width:none!important;border-radius:0!important;display:flex;gap:24px;align-items:center;justify-content:space-between;padding:16px 24px}
+.ccm-title{margin:0 0 8px;font-size:18px}.ccm-text{margin:0 0 16px}
+.ccm-actions{display:flex;flex-wrap:wrap;gap:10px}
+.ccm-btn{border:0;border-radius:6px;padding:10px 18px;font-size:14px;cursor:pointer}
+.ccm-btn--primary{background:var(--ccm-primary,#1863dc);color:var(--ccm-btn-text,#fff)}
+.ccm-btn--ghost{background:transparent;color:inherit;border:1px solid currentColor;opacity:.85}
+.ccm-modal{position:fixed;inset:0;z-index:100000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.ccm-modal__card{position:relative;background:var(--ccm-bg,#fff);color:var(--ccm-text,#212121);border-radius:10px;padding:28px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
+.ccm-modal__close{position:absolute;top:10px;right:12px;border:0;background:none;font-size:24px;cursor:pointer;color:inherit}
+.ccm-cat{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid rgba(0,0,0,.08)}
+.ccm-revisit{position:fixed;left:24px;bottom:24px;z-index:99998;background:var(--ccm-primary,#1863dc);color:var(--ccm-btn-text,#fff);
+    border:0;border-radius:999px;padding:10px 16px;font-size:13px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.25)}
+.ccm-cookie-table{width:100%;border-collapse:collapse;margin:12px 0}
+.ccm-cookie-table th,.ccm-cookie-table td{border:1px solid #ddd;padding:8px;text-align:left;font-size:13px}
+@media(max-width:640px){.ccm-banner{left:12px;right:12px;bottom:12px;max-width:none}.ccm-bar{flex-direction:column;align-items:flex-start}}

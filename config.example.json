@@ -1,0 +1,19 @@
+{
+  "maxPages": 25,
+  "waitMs": 6000,
+  "sites": [
+    {
+      "url": "https://client-a.com",
+      "endpoint": "https://client-a.com/wp-json/ccm/v1/scan",
+      "token": "PASTE_TOKEN_FROM_WP_ADMIN",
+      "acceptSelector": "#ccm-accept"
+    },
+    {
+      "url": "https://client-b.com",
+      "endpoint": "https://client-b.com/wp-json/ccm/v1/scan",
+      "token": "PASTE_TOKEN_FROM_WP_ADMIN",
+      "acceptSelector": "#ccm-accept",
+      "maxPages": 40
+    }
+  ]
+}

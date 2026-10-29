@@ -1,0 +1,9 @@
+{
+  "name": "ccm-scanner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Headless cookie scanner for the Consent Suite WP plugin",
+  "engines": { "node": ">=18" },
+  "scripts": { "scan": "node scanner.js" },
+  "dependencies": { "puppeteer": "^22.0.0" }
+}
