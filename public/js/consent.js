@@ -153,6 +153,9 @@ if ( CFG.showReject ) {
 var prefsBtn = button( t.prefs || 'Customize', 'ccm-btn ccm-btn--ghost', openPrefs );
 prefsBtn.id = 'ccm-prefs';
 row.appendChild( prefsBtn );
+
+b.appendChild( row );
+document.body.appendChild( b );
     }
 
     function openPrefs() {
