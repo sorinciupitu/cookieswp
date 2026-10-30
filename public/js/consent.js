@@ -211,6 +211,7 @@ document.body.appendChild( b );
 
     /* ---------- init ---------- */
     function init() {
+        if ( ! CFG.enabled ) return;
         setVars( CFG.colors );
         state.consent = read();
 

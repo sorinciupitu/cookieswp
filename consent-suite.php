@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Consent Suite
  * Description:  GDPR/CCPA cookie consent, script blocking, cookie scanner, consent log.
- * Version:      1.0.2
+ * Version:      1.0.3
  * Requires PHP: 7.4
  * License:      GPL-2.0-or-later
  * Text Domain:  consent-suite
@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CCM_VERSION', '1.0.2' );
+define( 'CCM_VERSION', '1.0.3' );
 define( 'CCM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CCM_URL', plugin_dir_url( __FILE__ ) );
 
@@ -54,7 +54,6 @@ function ccm_default_settings() {
         'gpc_enabled'        => 1,             // Global Privacy Control
         'geo_enabled'        => 0,
         'geo_regions'        => array( 'EU', 'GB' ),
-        'hide_for_logged_in' => 1,
         'colors'             => array(
             'bg'       => '#ffffff',
             'text'     => '#212121',

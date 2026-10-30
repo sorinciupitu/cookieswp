@@ -12,7 +12,6 @@ class CCM_Public {
 
     private function should_show() {
         if ( empty( $this->s['enabled'] ) ) return false;
-        if ( ! empty( $this->s['hide_for_logged_in'] ) && is_user_logged_in() ) return false;
         if ( ! empty( $this->s['geo_enabled'] ) ) {
             return CCM_Geo::matches( (array) $this->s['geo_regions'] );
         }
