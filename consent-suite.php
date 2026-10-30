@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name:  Consent Suite
- * Description:  GDPR/CCPA cookie consent, script blocking, cookie scanner, consent log.
- * Version:      1.0.3
+ * Description:  Consimțământ cookie GDPR/CCPA, blocare scripturi, scaner de cookie-uri, jurnal de consimțământ.
+ * Version:      1.0.4
  * Requires PHP: 7.4
  * License:      GPL-2.0-or-later
  * Text Domain:  consent-suite
@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CCM_VERSION', '1.0.3' );
+define( 'CCM_VERSION', '1.0.4' );
 define( 'CCM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CCM_URL', plugin_dir_url( __FILE__ ) );
 
@@ -61,20 +61,20 @@ function ccm_default_settings() {
             'btn_text' => '#ffffff',
         ),
         'categories'         => array(
-            'necessary'     => array( 'label' => 'Strictly necessary', 'locked' => 1, 'default_on' => 1 ),
-            'functional'    => array( 'label' => 'Functional',    'locked' => 0, 'default_on' => 0 ),
-            'analytics'     => array( 'label' => 'Analytics',     'locked' => 0, 'default_on' => 0 ),
-            'advertisement' => array( 'label' => 'Advertisement', 'locked' => 0, 'default_on' => 0 ),
+            'necessary'     => array( 'label' => 'Strict necesare', 'locked' => 1, 'default_on' => 1 ),
+            'functional'    => array( 'label' => 'Funcționale',    'locked' => 0, 'default_on' => 0 ),
+            'analytics'     => array( 'label' => 'Analiză',         'locked' => 0, 'default_on' => 0 ),
+            'advertisement' => array( 'label' => 'Publicitate',     'locked' => 0, 'default_on' => 0 ),
         ),
         'texts'              => array(
-            'title'       => 'We value your privacy',
-            'message'     => 'We use cookies to enhance your browsing experience and analyse our traffic. Click "Accept All" to consent to our use of cookies.',
-            'accept'      => 'Accept All',
-            'reject'      => 'Reject All',
-            'prefs'       => 'Customize',
-            'prefs_title' => 'Customize Consent Preferences',
-            'save'        => 'Save My Preferences',
-            'revisit'     => 'Cookie Settings',
+            'title'       => 'Respectăm confidențialitatea ta',
+            'message'     => 'Folosim cookie-uri pentru a îmbunătăți experiența de navigare și pentru a analiza traficul. Apasă „Acceptă toate" pentru a-ți da acordul.',
+            'accept'      => 'Acceptă toate',
+            'reject'      => 'Respinge toate',
+            'prefs'       => 'Personalizează',
+            'prefs_title' => 'Personalizează preferințele de consimțământ',
+            'save'        => 'Salvează preferințele',
+            'revisit'     => 'Setări cookie',
         ),
         'custom_rules'       => array(), // [ ['match'=>'domain.com', 'category'=>'analytics'], ... ]
     );

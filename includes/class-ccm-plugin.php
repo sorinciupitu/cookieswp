@@ -29,7 +29,7 @@ final class CCM_Plugin {
 
         add_shortcode( 'ccm_cookie_list', array( $this, 'cookie_list_shortcode' ) );
         add_shortcode( 'ccm_revisit_consent', function () {
-            return '<button type="button" class="ccm-revisit-link" onclick="window.CCM && CCM.showPreferences()">Cookie Settings</button>';
+            return '<button type="button" class="ccm-revisit-link" onclick="window.CCM && CCM.showPreferences()">Setări cookie</button>';
         } );
     }
 
@@ -50,7 +50,7 @@ final class CCM_Plugin {
             $group = array_filter( $rows, function ( $r ) use ( $key ) { return $r->category === $key; } );
             if ( ! $group ) continue;
             $out .= '<h3>' . esc_html( $cat['label'] ) . '</h3>';
-            $out .= '<table class="ccm-cookie-table"><thead><tr><th>Cookie</th><th>Provider</th><th>Type</th><th>Expiry</th><th>Description</th></tr></thead><tbody>';
+            $out .= '<table class="ccm-cookie-table"><thead><tr><th>Cookie</th><th>Furnizor</th><th>Tip</th><th>Expirare</th><th>Descriere</th></tr></thead><tbody>';
             foreach ( $group as $r ) {
                 $out .= sprintf( '<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
                     esc_html( $r->name ), esc_html( $r->provider ), esc_html( $r->ctype ),

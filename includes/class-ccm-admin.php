@@ -15,66 +15,66 @@ class CCM_Admin {
 
     public function menu() {
         add_menu_page( 'Consent Suite', 'Consent Suite', 'manage_options', 'consent-suite', array( $this, 'settings_page' ), 'dashicons-privacy' );
-        add_submenu_page( 'consent-suite', 'Cookies', 'Cookies', 'manage_options', 'ccm-cookies', array( $this, 'cookies_page' ) );
-        add_submenu_page( 'consent-suite', 'Consent Log', 'Consent Log', 'manage_options', 'ccm-log', array( $this, 'log_page' ) );
+        add_submenu_page( 'consent-suite', 'Cookie-uri', 'Cookie-uri', 'manage_options', 'ccm-cookies', array( $this, 'cookies_page' ) );
+        add_submenu_page( 'consent-suite', 'Jurnal de consimțământ', 'Jurnal de consimțământ', 'manage_options', 'ccm-log', array( $this, 'log_page' ) );
     }
 
     public function settings_page() {
         if ( ! current_user_can( 'manage_options' ) ) return;
         $s = $this->s; ?>
         <div class="wrap"><h1>Consent Suite</h1>
-        <?php if ( isset( $_GET['saved'] ) ) echo '<div class="notice notice-success"><p>Settings saved.</p></div>'; ?>
+        <?php if ( isset( $_GET['saved'] ) ) echo '<div class="notice notice-success"><p>Setările au fost salvate.</p></div>'; ?>
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'ccm_save' ); ?><input type="hidden" name="action" value="ccm_save">
             <table class="form-table">
-                <tr><th>Enabled</th><td><label><input type="checkbox" name="s[enabled]" value="1" <?php checked( $s['enabled'] ); ?>> Show consent banner</label></td></tr>
-                <tr><th>Compliance mode</th><td><select name="s[compliance_mode]">
+                <tr><th>Activat</th><td><label><input type="checkbox" name="s[enabled]" value="1" <?php checked( $s['enabled'] ); ?>> Afișează bannerul de consimțământ</label></td></tr>
+                <tr><th>Mod de conformitate</th><td><select name="s[compliance_mode]">
                     <?php foreach ( array( 'gdpr' => 'GDPR / ePrivacy', 'ccpa' => 'CCPA', 'both' => 'GDPR + CCPA' ) as $v => $l ) : ?>
                     <option value="<?php echo $v; ?>" <?php selected( $s['compliance_mode'], $v ); ?>><?php echo $l; ?></option>
                     <?php endforeach; ?></select></td></tr>
-                <tr><th>Layout / position</th><td>
-                    <select name="s[layout]"><option value="box" <?php selected( $s['layout'], 'box' ); ?>>Box</option><option value="bar" <?php selected( $s['layout'], 'bar' ); ?>>Full-width bar</option></select>
+                <tr><th>Aspect / poziție</th><td>
+                    <select name="s[layout]"><option value="box" <?php selected( $s['layout'], 'box' ); ?>>Caseta</option><option value="bar" <?php selected( $s['layout'], 'bar' ); ?>>Bară pe toată lățimea</option></select>
                     <select name="s[position]"><?php foreach ( array( 'bottom-left','bottom-center','bottom-right','top-left','top-right' ) as $p ) : ?>
                     <option value="<?php echo $p; ?>" <?php selected( $s['position'], $p ); ?>><?php echo $p; ?></option><?php endforeach; ?></select></td></tr>
-                <tr><th>Colors</th><td><?php foreach ( array( 'bg' => 'Background', 'text' => 'Text', 'btn_bg' => 'Button', 'btn_text' => 'Button text' ) as $k => $l ) : ?>
+                <tr><th>Culori</th><td><?php foreach ( array( 'bg' => 'Fundal', 'text' => 'Text', 'btn_bg' => 'Buton', 'btn_text' => 'Text buton' ) as $k => $l ) : ?>
                     <label><?php echo $l; ?> <input type="color" name="s[colors][<?php echo $k; ?>]" value="<?php echo esc_attr( $s['colors'][ $k ] ); ?>"></label> <?php endforeach; ?></td></tr>
-                <tr><th>Banner texts</th><td>
+                <tr><th>Texte banner</th><td>
                     <input class="regular-text" name="s[texts][title]"   value="<?php echo esc_attr( $s['texts']['title'] ); ?>"><br>
                     <textarea class="large-text" rows="3" name="s[texts][message]"><?php echo esc_textarea( $s['texts']['message'] ); ?></textarea><br>
                     <input class="regular-text" name="s[texts][accept]"  value="<?php echo esc_attr( $s['texts']['accept'] ); ?>">
                     <input class="regular-text" name="s[texts][reject]"  value="<?php echo esc_attr( $s['texts']['reject'] ); ?>">
                     <input class="regular-text" name="s[texts][prefs]"   value="<?php echo esc_attr( $s['texts']['prefs'] ); ?>">
                     <input class="regular-text" name="s[texts][revisit]" value="<?php echo esc_attr( $s['texts']['revisit'] ); ?>"></td></tr>
-                <tr><th>Behaviour</th><td>
-                    <label><input type="checkbox" name="s[block_scripts]" value="1" <?php checked( $s['block_scripts'] ); ?>> Block scripts before consent</label><br>
-                    <label><input type="checkbox" name="s[block_iframes]" value="1" <?php checked( $s['block_iframes'] ); ?>> Block third-party iframes</label><br>
-                    <label><input type="checkbox" name="s[log_consents]"  value="1" <?php checked( $s['log_consents'] ); ?>> Log consent records</label><br>
+                <tr><th>Comportament</th><td>
+                    <label><input type="checkbox" name="s[block_scripts]" value="1" <?php checked( $s['block_scripts'] ); ?>> Blochează scripturile înainte de consimțământ</label><br>
+                    <label><input type="checkbox" name="s[block_iframes]" value="1" <?php checked( $s['block_iframes'] ); ?>> Blochează iframe-urile terțe</label><br>
+                    <label><input type="checkbox" name="s[log_consents]"  value="1" <?php checked( $s['log_consents'] ); ?>> Înregistrează consimțămintele</label><br>
                     <label><input type="checkbox" name="s[gcm_enabled]"   value="1" <?php checked( $s['gcm_enabled'] ); ?>> Google Consent Mode v2</label><br>
-                    <label><input type="checkbox" name="s[gpc_enabled]"   value="1" <?php checked( $s['gpc_enabled'] ); ?>> Respect Global Privacy Control (GPC)</label></td></tr>
-                <tr><th>Geo-targeting</th><td>
-                    <label><input type="checkbox" name="s[geo_enabled]" value="1" <?php checked( $s['geo_enabled'] ); ?>> Only show banner in these regions</label>
-                    <input class="regular-text" name="s[geo_regions]" value="<?php echo esc_attr( implode( ',', (array) $s['geo_regions'] ) ); ?>"> <em>(e.g. EU,GB,CA — "EU" matches all EU members)</em></td></tr>
-                <tr><th>Custom blocking rules</th><td>
+                    <label><input type="checkbox" name="s[gpc_enabled]"   value="1" <?php checked( $s['gpc_enabled'] ); ?>> Respectă Global Privacy Control (GPC)</label></td></tr>
+                <tr><th>Țintire geografică</th><td>
+                    <label><input type="checkbox" name="s[geo_enabled]" value="1" <?php checked( $s['geo_enabled'] ); ?>> Afișează bannerul doar în aceste regiuni</label>
+                    <input class="regular-text" name="s[geo_regions]" value="<?php echo esc_attr( implode( ',', (array) $s['geo_regions'] ) ); ?>"> <em>(ex. EU,GB,CA — „EU" acoperă toate țările UE)</em></td></tr>
+                <tr><th>Reguli personalizate de blocare</th><td>
                     <textarea class="large-text code" rows="4" name="s[custom_rules_raw]" placeholder="cdn.example.com|analytics"><?php
                     echo esc_textarea( implode( "\n", array_map( function ( $r ) { return $r['match'] . '|' . $r['category']; }, (array) $s['custom_rules'] ) ) ); ?></textarea>
-                    <p class="description">One per line: <code>needle|category</code>. Matches script src, inline script body, or iframe src.</p></td></tr>
-                <tr><th>Consent version</th><td>
+                    <p class="description">Câte una pe linie: <code>șablon|categorie</code>. Potrivește src-ul scriptului, corpul scriptului inline sau src-ul iframe-ului.</p></td></tr>
+                <tr><th>Versiune consimțământ</th><td>
                     <input type="number" name="s[consent_version]" value="<?php echo (int) $s['consent_version']; ?>" min="1">
-                    <p class="description">Increase to re-prompt every visitor (e.g. after policy changes).</p></td></tr>
-                <tr><th>Scan token</th><td>
+                    <p class="description">Mărește pentru a re-cere consimțământul tuturor vizitatorilor (ex. după modificarea politicii).</p></td></tr>
+                <tr><th>Token scanare</th><td>
                     <input class="large-text code" type="text" readonly value="<?php echo esc_attr( ccm_get_scan_token() ); ?>" onfocus="this.select()">
-                    <p class="description">Paste into the headless scanner's <code>config.json</code> to push scan results here.</p>
+                    <p class="description">Lipește în <code>config.json</code> al scanerului headless pentru a trimite aici rezultatele scanării.</p>
                 </td></tr>
             </table>
-            <p><button class="button button-primary">Save Settings</button></p>
+            <p><button class="button button-primary">Salvează setările</button></p>
         </form>
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'ccm_regen_token' ); ?><input type="hidden" name="action" value="ccm_regen_token">
-            <p><button class="button">Regenerate scan token</button></p>
+            <p><button class="button">Regenerează token-ul de scanare</button></p>
         </form>
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <?php wp_nonce_field( 'ccm_scan' ); ?><input type="hidden" name="action" value="ccm_scan">
-            <p><button class="button">Scan site for cookies</button></p>
+            <p><button class="button">Scanează site-ul pentru cookie-uri</button></p>
         </form></div>
         <?php
     }
@@ -121,23 +121,23 @@ class CCM_Admin {
                 if ( in_array( $cat, array( 'necessary','functional','analytics','advertisement','unclassified' ), true ) )
                     $wpdb->update( $t, array( 'category' => $cat ), array( 'id' => absint( $id ) ) );
             }
-            echo '<div class="notice notice-success"><p>Categories updated.</p></div>';
+            echo '<div class="notice notice-success"><p>Categoriile au fost actualizate.</p></div>';
         }
         $rows = $wpdb->get_results( "SELECT * FROM $t ORDER BY category, name LIMIT 500" ); ?>
-        <div class="wrap"><h1>Cookies</h1>
-        <p>Scanner runs daily via WP-Cron. JS-set cookies from third parties may require the headless scanner (see docs).</p>
+        <div class="wrap"><h1>Cookie-uri</h1>
+        <p>Scanerul rulează zilnic prin WP-Cron. Cookie-urile setate prin JS de terți pot necesita scanerul headless (vezi documentația).</p>
         <form method="post"><?php wp_nonce_field( 'ccm_cookies', 'ccm_nonce' ); ?>
-        <table class="widefat striped"><thead><tr><th>Name</th><th>Provider</th><th>Type</th><th>Expiry</th><th>Category</th></tr></thead><tbody>
+        <table class="widefat striped"><thead><tr><th>Nume</th><th>Furnizor</th><th>Tip</th><th>Expirare</th><th>Categorie</th></tr></thead><tbody>
         <?php foreach ( $rows as $r ) : ?><tr>
             <td><strong><?php echo esc_html( $r->name ); ?></strong><br><small><?php echo esc_html( wp_trim_words( $r->pages, 8 ) ); ?></small></td>
             <td><?php echo esc_html( $r->provider ); ?></td>
             <td><?php echo esc_html( $r->ctype ); ?></td>
             <td><?php echo esc_html( $r->expiry ); ?></td>
             <td><select name="cat[<?php echo (int) $r->id; ?>]"><?php
-                foreach ( array( 'necessary','functional','analytics','advertisement','unclassified' ) as $c )
-                    printf( '<option value="%1$s" %2$s>%1$s</option>', $c, selected( $r->category, $c, false ) ); ?></select></td>
+                foreach ( array( 'necessary'=>'Necesare','functional'=>'Funcționale','analytics'=>'Analiză','advertisement'=>'Publicitate','unclassified'=>'Neclasificate' ) as $c => $cl )
+                    printf( '<option value="%1$s" %2$s>%3$s</option>', $c, selected( $r->category, $c, false ), $cl ); ?></select></td>
         </tr><?php endforeach; ?></tbody></table>
-        <p><button class="button button-primary">Save categories</button></p></form></div>
+        <p><button class="button button-primary">Salvează categoriile</button></p></form></div>
         <?php
     }
 
@@ -149,12 +149,12 @@ class CCM_Admin {
         $total = (int) $wpdb->get_var( "SELECT COUNT(*) FROM $t" );
         $rows  = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $t ORDER BY id DESC LIMIT %d OFFSET %d", $per, ( $paged - 1 ) * $per ) );
         $export = wp_nonce_url( admin_url( 'admin-post.php?action=ccm_export' ), 'ccm_export' ); ?>
-        <div class="wrap"><h1>Consent Log
-            <a href="<?php echo esc_url( $export ); ?>" class="button">Export CSV</a></h1>
-        <table class="widefat striped"><thead><tr><th>Date</th><th>Action</th><th>Categories (F/A/D)</th><th>Region</th><th>User ID</th><th>Consent v</th></tr></thead><tbody>
+        <div class="wrap"><h1>Jurnal de consimțământ
+            <a href="<?php echo esc_url( $export ); ?>" class="button">Exportă CSV</a></h1>
+        <table class="widefat striped"><thead><tr><th>Dată</th><th>Acțiune</th><th>Categorii (F/A/D)</th><th>Regiune</th><th>ID utilizator</th><th>Vers. consimțământ</th></tr></thead><tbody>
         <?php foreach ( $rows as $r ) : ?><tr>
             <td><?php echo esc_html( $r->created_at ); ?></td>
-            <td><?php echo esc_html( $r->action ); ?></td>
+            <td><?php echo esc_html( array( 'accept_all'=>'Acceptă toate', 'reject_all'=>'Respinge toate', 'custom'=>'Personalizat', 'gpc'=>'GPC' )[ $r->action ] ?? $r->action ); ?></td>
             <td><?php echo (int) $r->functional . ' / ' . (int) $r->analytics . ' / ' . (int) $r->advertisement; ?></td>
             <td><?php echo esc_html( $r->region ); ?></td>
             <td><code><?php echo esc_html( substr( $r->uuid, 0, 8 ) ); ?></code></td>

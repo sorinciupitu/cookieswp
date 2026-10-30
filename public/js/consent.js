@@ -138,19 +138,19 @@
         var p = el( 'p', 'ccm-text' ); p.textContent = t.message || ''; b.appendChild( p );
 
         var row = el( 'div', 'ccm-actions' );
-        var accept = button( t.accept || 'Accept All', 'ccm-btn ccm-btn--primary',
+        var accept = button( t.accept || 'Acceptă toate', 'ccm-btn ccm-btn--primary',
     function () { save( fresh( true ), 'accept_all' ); } );
 accept.id = 'ccm-accept';
 row.appendChild( accept );
 
 if ( CFG.showReject ) {
-    var reject = button( t.reject || 'Reject All', 'ccm-btn ccm-btn--ghost',
+    var reject = button( t.reject || 'Respinge toate', 'ccm-btn ccm-btn--ghost',
         function () { save( fresh( false ), 'reject_all' ); } );
     reject.id = 'ccm-reject';
     row.appendChild( reject );
 }
 
-var prefsBtn = button( t.prefs || 'Customize', 'ccm-btn ccm-btn--ghost', openPrefs );
+var prefsBtn = button( t.prefs || 'Personalizează', 'ccm-btn ccm-btn--ghost', openPrefs );
 prefsBtn.id = 'ccm-prefs';
 row.appendChild( prefsBtn );
 
@@ -163,7 +163,7 @@ document.body.appendChild( b );
         var t    = CFG.texts || {};
         var wrap = el( 'div', 'ccm-modal' );
         var card = el( 'div', 'ccm-modal__card' );
-        var h    = el( 'h2', 'ccm-title' ); h.textContent = t.prefs_title || 'Privacy preferences';
+        var h    = el( 'h2', 'ccm-title' ); h.textContent = t.prefs_title || 'Preferințe de confidențialitate';
         card.appendChild( h );
 
         var list  = el( 'div', 'ccm-cats' );
@@ -181,7 +181,7 @@ document.body.appendChild( b );
             boxes[ key ] = cb;
         } );
         card.appendChild( list );
-        card.appendChild( button( t.save || 'Save My Preferences', 'ccm-btn ccm-btn--primary', function () {
+        card.appendChild( button( t.save || 'Salvează preferințele', 'ccm-btn ccm-btn--primary', function () {
             var c = fresh( false );
             CATS.forEach( function ( k ) { c[ k ] = boxes[ k ] ? boxes[ k ].checked : false; } );
             save( c, 'custom' );
@@ -203,7 +203,7 @@ document.body.appendChild( b );
         if ( state.revisit ) return;
         var r = el( 'button', 'ccm-revisit' );
         r.type = 'button';
-        r.textContent = ( CFG.texts && CFG.texts.revisit ) || 'Cookie Settings';
+        r.textContent = ( CFG.texts && CFG.texts.revisit ) || 'Setări cookie';
         r.addEventListener( 'click', openPrefs );
         document.body.appendChild( r );
         state.revisit = r;
